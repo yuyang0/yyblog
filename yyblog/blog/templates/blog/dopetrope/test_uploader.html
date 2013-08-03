@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>uploader</title>
+    <meta name="author" content="Yu Yang">
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	  <script>window.jQuery || document.write('<script src={% static "js/jquery-1.8.3.min.js" %} ><\/script>')</script>
+
+      <script src="{% static "js/jquery.form.js" %}"></script>
+    </head>
+
+    <body>
+      <h1>uploader</h1>
+      <form enctype="multipart/form-data" id="upladForm" method="post" action="/ajax-upload/">
+        {% csrf_token %}
+        <input type="file" name="fileElementId" value="" />
+        <textarea id="formTextarea"> </textarea>
+        <input type="submit" value="submit" />
+      </form>
+      <script type="text/javascript">
+        $(function() {
+
+        	$(' #upladForm').ajaxForm({
+              success: alert_url
+            });
+
+        });
+function alert_url(resp_url, status_text){
+  $(formTextarea).val(resp_url);
+}
+      </script>
+      <div id="fileinfo"></div>
+      <hr>
+        <address>
+          <a href="mailto:yangyu@yangyu-4730">Yu Yang</a>,
+          01 Aug 2013
+        </address>
+      </body>
+    </html>

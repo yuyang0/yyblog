@@ -1,0 +1,2 @@
+** Yet Another Django blog
+   一个使用django搭建的个人博客

@@ -1,0 +1,57 @@
+<div class="4u">
+
+	<!-- Sidebar -->
+		<section id="about-box" class="box about-box">
+			<header>
+				<h3>关于作者</h3>
+			</header>
+			<a href="{% url "blog_about" %}"><img class="img-box" src="{{ author.small_avatar.url }}" /></a>
+			<p> {{ author.abstract|removetags:"img div p"|safe }}</p>
+			<footer>
+				<a href="{% url "blog_about" %}" class="button button-alt">了解更多</a>
+			</footer>
+			<div style="clear: both;"></div>
+		</section>
+		<section class="box">
+			<header>
+				<h3>博客分类</h3>
+			</header>
+			<ul class="divided">
+				{% for category in categories %}
+				<li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+				{% endfor %}
+			</ul>
+		</section>
+		<section class="box is-search">
+			<header>
+				<h3>搜索</h3>
+			</header>
+			<form method="get" action="{% url "blog_search" %}">
+				<fieldset>
+					<input type="text" class="text" name="q" placeholder="search" />
+				</fieldset>
+			</form>
+		</section>
+		<section class="box">
+			<header>
+				<h3>点击排行</h3>
+			</header>
+			<ul class="divided">
+				{% for article in populars %}
+				<li><a href="{{ article.get_absolute_url }}">{{ article.title }}
+					<span>发表于{{ article.created_time|date:"Y年n月j日 P" }}</span></a></li>
+				{% endfor %}
+			</ul>
+		</section>
+		<section class="box tagclouds">
+			<header>
+				<h3>标签云</h3>
+			</header>
+			<ul>
+				{% for tag in tags %}
+					<li><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
+					</li>
+			    {% endfor %}
+			</ul>
+		</section>
+</div>

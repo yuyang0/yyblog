@@ -1,0 +1,9 @@
+*.bak
+*.bakk
+*.pyc
+\#*
+*~
+.venv
+.dir-locals.el
+data.db
+migrations
