@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
 
+from filebrowser.sites import site
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -23,7 +24,7 @@ urlpatterns = patterns('',
 # Grappelli url mapping
 urlpatterns += patterns('',
     url(r'^grappelli/', include('grappelli.urls')),
-    # (r'^admin/filebrowser/', include(site.urls)),
+    url(r'^admin/filebrowser/', include(site.urls)),
 )
 
 urlpatterns += patterns('',

@@ -2,11 +2,12 @@
 <article class="box is-post">
 	<header>
 		<h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
-		<span class="byline">发表于{{ article.created|date:"Y年n月j日 P" }}&nbsp; &nbsp; 
+		<span class="byline">发表于{{ article.created_time|date:"Y年n月j日 P" }}&nbsp; &nbsp;
 			位于分类<a href="{{ article.category.get_absolute_url }}">{{ article.category }}</a></span>
 	</header>
 	<section>
-		{{ article.abstract|safe }}
+      {% load markup %}
+		{{ article.summary|markdown:'codehilite' }}
 	</section>
 	<footer class="actions">
 		<a href="{{ article.get_absolute_url }}" class="button button-icon button-icon-1">继续阅读</a>
@@ -17,5 +18,5 @@
 
 
 <article class="box">
-	{% include "blog/dopetrope/paginator.html" with page_type=page_type|default:0 %}
+	{% include "blog/dopetrope/paginator.html" %}
 </article>

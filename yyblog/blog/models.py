@@ -4,9 +4,13 @@
 from datetime import datetime
 
 from django.db import models
+from django.contrib.auth.admin import User
+from django.conf import settings
 # mptt
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
+
+from filebrowser.fields import FileBrowseField
 
 import util
 
@@ -33,8 +37,7 @@ class Article(models.Model):
                                  null=True, verbose_name='分类')
     clicks = models.IntegerField(default=0, editable=False, verbose_name='点击数')
     always_top = models.BooleanField(default=False, verbose_name='置顶')
-    # author = models.ForeignKey('BlogUser', verbose_name='作者')
-    author = models.CharField(max_length=40, verbose_name='作者')
+    author = models.ForeignKey('BlogUser', verbose_name='作者')
     status = models.IntegerField(choices=STATUS_CHOICE,
                                  default=1, verbose_name='状态')
 
@@ -121,6 +124,7 @@ class Comment(MPTTModel):
     ip = models.IPAddressField(blank=True, null=True, verbose_name='IP地址')
     article_replied = models.ForeignKey('Article', blank=True, null=True,
                                         default=None, verbose_name='评论的文章')
+    is_visible = models.BooleanField(default=True, verbose_name='是否可见')
     comment_replied = TreeForeignKey('self', blank=True, null=True,
                                         related_name='children')
     gravatar = models.URLField(blank=True, null=True, verbose_name='头像')
@@ -128,6 +132,17 @@ class Comment(MPTTModel):
     # manger
 
     objects = TreeManager()
+
+    def __getattr__(self, name):
+        if name == 'is_author':
+            if self.article_replied:
+                author_email = self.article_replied.author.user.email
+            else:
+                author_email = settings.ADMINS[0][1]
+
+            return (author_email == self.user_email)
+        return super(Comment, self).__getattr__(name)
+
     class Meta:
         ordering = ['-post_time']
         verbose_name = '评论'
@@ -139,25 +154,46 @@ class Comment(MPTTModel):
     def __unicode__(self):
         return self.content
 
-# class ArticleTag(models.Model):
-#     """
-#     """
-#     tag = models.ForeignKey('Tag')
-#     article = models.ForeignKey('Article')
-#     def __unicode__(self):
-#         return self.tag
 
-#     class Meta:
-#         verbose_name = '文章标签'
-#         verbose_name_plural = '文章标签'
+class BlackList(models.Model):
+    ip_address = models.IPAddressField(verbose_name='IP地址')
+
+    class Meta:
+        verbose_name = '黑名单'
+        verbose_name_plural = '黑名单'
+
+    def __unicode__(self):
+        return self.ip_address
 
 
-# class BlogUser(models.Model):
-#     """
-#     the model of blog user
-#     """
-#     username = models.CharField(max_length=50, unique=True)
-#     password = models.CharField(max_length=100)
+class FriendLink(models.Model):
+    name = models.CharField(max_length=50, verbose_name='友情链接名称')
+    url = models.URLField(verbose_name='友情链接地址')
 
-#     def __unicode__(self):
-#         return self.username
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '友情链接'
+        verbose_name_plural='友情链接'
+
+
+class BlogUser(models.Model):
+    """
+    the model of blog user
+    """
+    user = models.OneToOneField(User)
+    # avatar = FileBrowseField(max_length=40, verbose_name='头像')
+    info = models.TextField(verbose_name='用户信息')
+
+    def __getattr__(self, name):
+        if name == 'summary':
+            return self.info[:400]
+        return super(BlogUser, self).__getattr__(name)
+
+    def __unicode__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = '用户'
+        verbose_name_plural = '用户'

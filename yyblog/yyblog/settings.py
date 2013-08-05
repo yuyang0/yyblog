@@ -5,12 +5,14 @@ import os.path
 import util
 
 PROJECT_ROOT = util.get_project_root()
+SITE_TITLE = "Yu Yang's Blog"
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    #('Your Name', 'your_email@example.com'),
+    ('yangyu', 'yy2012cn@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -130,7 +132,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'grappelli',
-    # 'filebrowser',
+    'filebrowser',
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

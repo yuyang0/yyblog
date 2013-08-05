@@ -17,10 +17,11 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.db.models import F
 from django.core.context_processors import csrf
+from django.contrib.auth.admin import User
 # Rss
 from django.contrib.syndication.views import Feed
 
-from models import Article, Tag, Category, Comment
+from models import Article, Tag, Category, Comment, BlackList, FriendLink
 from forms import CommentForm
 import util
 
@@ -67,7 +68,11 @@ def get_common_resp_ctx():
         'populars': Article.objects.order_by('-clicks')[:5],
         'tags': Tag.objects.all(),
         'categories': Category.objects.all(),
+        'links': FriendLink.objects.all(),
+        'site_title': settings.SITE_TITLE
     }
+    # Get Administrator of this site
+    common_ctx['author'] = User.objects.get(username='admin').bloguser
     return common_ctx
 
 
@@ -84,7 +89,6 @@ def page_index_common_resp_ctx(page_idx, objs):
         raise Http404
     ctx = {'articles': articles}
     ctx.update(paginator_response(p.num_pages, idx))
-
 
     ctx.update(get_common_resp_ctx())
 
@@ -109,7 +113,7 @@ def article(request, idx, slug):
     """
     theme = util.get_theme(request)
     idx = int(idx)
-    article = get_object_or_404(Article, id=idx)
+    article = get_object_or_404(Article, pk=idx)
     ctx = {
         'article': article,
     }
@@ -131,7 +135,7 @@ def article(request, idx, slug):
 def tag(request, idx, slug, page_idx=1):
     """
     """
-    t = Tag.objects.get(id=int(idx))
+    t = Tag.objects.get(pk=int(idx))
     articles = t.article_set.all()
 
     ctx = page_index_common_resp_ctx(page_idx, articles)
@@ -146,7 +150,7 @@ def tag(request, idx, slug, page_idx=1):
 def category(request, idx, slug, page_idx=1):
     """
     """
-    cate = Category.objects.get(id=int(idx))
+    cate = Category.objects.get(pk=int(idx))
     articles = cate.article_set.all()
 
     ctx = page_index_common_resp_ctx(page_idx, articles)
@@ -168,6 +172,14 @@ def ajax_add_comment(request):
             comment = f.save(commit=False)
 
             comment.ip = util.get_user_IP(request)
+            # test if the ip address is in black list
+            if BlackList.objects.filter(ip_address=comment.ip):
+                comment.is_visible = False
+                d = {
+                    'success': False,
+                    'msg': '评论失败，你的ip被屏蔽'
+                }
+                return HttpResponse(json.dumps(d))
             comment.user_email = comment.user_email.strip()
             comment.gravatar = util.get_gravatar_img_url(
                 comment.user_email,
@@ -176,7 +188,8 @@ def ajax_add_comment(request):
             comment.save()
 
             article_id = comment.article_replied
-            nodes = Comment.objects.filter(article_replied=article_id)
+            nodes = Comment.objects.filter(article_replied=article_id,
+                                           is_visible=True)
             nodes = list(nodes)
 
             theme = util.get_theme(request)

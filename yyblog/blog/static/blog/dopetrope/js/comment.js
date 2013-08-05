@@ -11,6 +11,11 @@ $(function(){
     dataType: 'json'
   });
 
+  $("input#not-robot").click(function() {
+		$("#commentform").append("<input id=\"not-robot-input\" type=\"hidden\" name=\"not_robot\" value=\"1\" />");
+		$(this).hide();
+	});
+
   $('div.reply').live('click', function() {
 	var name = $.trim($(this).siblings('header').children('cite').text());
 	var id = $.trim($(this).parents('li:first').attr('id'));
@@ -58,6 +63,12 @@ function checkComment(arr, $form, options) {
   if(locked)
 	return false;
 
+  // check if you have clicked the not-robot button
+  if (!($('form#commentform input#not-robot-input').val())){
+    block("评论失败，请点击我不是机器人按钮后在评论!");
+    setTimeout($.unblockUI, 1500);
+    return false;
+  }
   for(itm in arr) {
 	var obj = arr[itm];
 
@@ -84,9 +95,10 @@ function dealResponse(jsonData, statusText){
     $("section#comments").replaceWith(jsonData.html);
 	// reset the comment form
 	$('textarea#message').val('');
-    $('input#name').val('');
-    $('input#email').val('');
-    $('input#website').val('');
+    // $('input#name').val('');
+    // $('input#email').val('');
+    // $('input#website').val('');
+
 	// set reply comment id to empty and hide cancel replay button
 	$('#id_comment_replied').val('');
 	$('form#commentform input[type=button]:last').hide();

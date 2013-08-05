@@ -107,7 +107,7 @@ input[type="text"]:focus, textarea:focus {
 }
 
 /*
-article 
+article
 */
 article.is-post .byline
 {
@@ -121,7 +121,7 @@ article.is-post table {
 }
 article.is-post tr { background: #FFF; }
 article.is-post th, article.is-post td {
-	text-align: left;			
+	text-align: left;
 	border-width: 1px;
   	border-style: solid;
 }
@@ -370,18 +370,6 @@ ul.divided li a, article a, section#footer a {
 }
 
 /*
-Syntax Highlighter
-*/
-.syntaxhighlighter {
-	width: 100% !important;
-	margin: 1em 0 1em 0 !important;
-	position: relative !important;
-	overflow: auto !important;
-	font-size: 1em !important;
-	padding:1px;
-}
-
-/*
 Icon
 */
 .icon48
@@ -396,3 +384,25 @@ ul.social li.google				{ background: #1645AE; }
 ul.social li.google:hover		{ background: #2655BE; }
 ul.social li.txweibo			{ background: #00BCFF; }
 ul.social li.txweibo:hover		{ background: #10CCFF; }
+
+/* for pre tag */
+
+pre {
+    font-family: Monaco, Consolas, Inconsolata, "DEJA VU SANS MONO", "DROID SANS MONO", Proggy, monospace;
+    font-size: 90%;
+    /* border: 1px solid #dddddd; */
+
+    padding: 10px;
+    line-height: 140%;
+    margin-left: 10px;
+    width: 95%;
+
+    -webkit-box-shadow: 0px 0px 4px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0px 0px 4px rgba(0,0,0,0.23);
+    box-shadow: 0px 0px 4px rgba(0,0,0,0.23);
+}
+
+code {
+    font-family: Inconsolata, Consolas, "DEJA VU SANS MONO", "DROID SANS MONO", Proggy, monospace;
+    font-size: 90%;
+}

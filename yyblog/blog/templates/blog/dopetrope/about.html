@@ -1,7 +1,7 @@
 {% extends "blog/dopetrope/base.html" %}
 
 {% block title %}
-关于作者 - 
+关于作者 -
 {% endblock %}
 
 {% block meta %}
@@ -25,7 +25,7 @@
 		<h2><a href="{% url "blog_about" %}">关于作者</a></h2>
 	</header>
 	<section>
-		{{ user.info|safe }}
+		{{ author.info|safe }}
 	</section>
 </article>
 

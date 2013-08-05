@@ -23,10 +23,10 @@
 					<header class="comment-meta comment-author vcard">
 						<img src="{{ node.gravatar }}" alt="" class="avatar thumbnail" height="60" width="60" />
 						<cite class="fn">
-							<a class="url" href="{{ node.site }}"{% if not node.site %} onclick="return false;"{%endif%}>{{ node.username }}</a>
+							<a class="url" href="{{ node.user_site }}"{% if not node.user_site %} onclick="return false;"{%endif%}>{{ node.username }}</a>
 						</cite>
 						<a href="#" onclick="return false;">
-							<time datetime="{{ node.post_date|date:"Y-n-j" }}">{{ node.friend_datestr }}</time>
+							<time datetime="{{ node.post_time|date:"Y-n-j" }}">{{ node.post_time|date:"Y-n-j H:i" }}</time>
 						</a>
 						{% if node.is_author %}
 						<strong class="author-sign">作者</strong>
