@@ -1,3 +1,15 @@
+{% if page_type == 0 %}
+{% url "blog_index" as url_prefix %}
+{% endif %}
+{% if page_type == 1 %}
+{% url "blog_category" idx slug as url_prefix %}
+{% endif %}
+{% if page_type == 2 %}
+{% url "blog_tag" idx slug as url_prefix %}
+{% endif %}
+{% if page_type == 3 %}
+{% url "blog_search" as url_prefix %}
+{% endif %}
 
 <div class="pager">
 

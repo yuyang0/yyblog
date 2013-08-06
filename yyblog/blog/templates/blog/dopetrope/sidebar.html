@@ -5,7 +5,7 @@
 			<header>
 				<h3>关于作者</h3>
 			</header>
-			<a href="{% url "blog_about" %}"><img class="img-box" src="{{ author.small_avatar.url }}" /></a>
+			<a href="{% url "blog_about" %}"><img class="img-box" src="{{ author.small_avatar }}" /></a>
 			<p> {{ author.summary|removetags:"img div p"|safe }}</p>
 			<footer>
 				<a href="{% url "blog_about" %}" class="button button-alt">了解更多</a>

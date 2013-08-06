@@ -1,42 +1,57 @@
 {% extends "blog/dopetrope/base.html" %}
 
 {% block title %}
-搜索{{ query }} - 
+  搜索{{ query }} -
 {% endblock %}
 
 {% block js %}
-	<script language="JavaScript">
-		$(function(){
-			$('div.pager a').each(function(i) {
-				href = $(this).attr('href');
-				$(this).attr('href', href+'?q={{ query }}')
-			});
-		});
-	</script>
-{% endblock %}
+  <script language="JavaScript">
+  // Read a page's GET URL variables and return them as an associative array.
+  function getUrlVars()
+{
+  var vars = [], hash;
+  var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+  for(var i = 0; i < hashes.length; i++)
+  {
+    hash = hashes[i].split('=');
+    vars.push(hash[0]);
+    vars[hash[0]] = hash[1];
+  }
+  return vars;
+}
+$(function(){
+  $('div.pager a').each(function(i) {
+    query_str = getUrlVars().q
+	href = $(this).attr('href');
+	$(this).attr('href', href+'?q=' + query_str)
+  });
+});
+	                 </script>
+                   {% endblock %}
 
-{% block main %}
-	<article class="box">
-		<header>
-			<h3>共搜索到{{ count }}条结果，以下是{% if start == end %}{{ start }}{% else %}{{ start }} - {{ end }}{% endif %}条</h3>
-		</header> 
-	</article>
-	
-    {% for item in results %}
-    <article class="box is-post">
-    	<header>
-    		<h3><a href="{{ item.link }}">{{ item.title }}</a></h3>
-		</header>
-		<section>
-			<p>{{ item.htmlSnippet|safe }}</p>
-			<p><a href="{{ item.link }}">{{ item.link }}</a></p>
-		</section>
-	</article>
-	{% endfor %}
-	
-	{% if count > n_per_page %}
-	<article class="box">
-		{% include "blog/dopetrope/paginator.html" with page_type=3 %}
-	</article>
-	{% endif %}
+                   {% block main %}
+	                 <article class="box">
+		               <header>
+			             <h3>共搜索到{{ articles|length }}条结果，以下是第{% if start == end %}{{ start }}{% else %}{{ start }} - {{ end }}{% endif %}条</h3>
+		               </header>
+	                 </article>
+
+                     {% for item in articles %}
+                       <article class="box is-post">
+    	                 <header>
+    		               <h3><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></h3>
+		                 </header>
+		                 <section>
+			               <!-- <p>{{ item.summary|safe }}</p> -->
+                           {% load markup %}
+                           <p>{{ item.summary|markdown:'codehilite' }}</p>
+                           <p><a href="{{ item.get_absolute_url }}" class="button button-icon button-icon-1">继续阅读</a></p>
+		                 </section>
+	                   </article>
+	                 {% endfor %}
+
+	                 <article class="box">
+		               {% include "blog/dopetrope/paginator.html" with page_type=3 %}
+	                 </article>
+
 {% endblock %}

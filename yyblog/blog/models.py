@@ -61,7 +61,7 @@ class Article(models.Model):
         if name == 'summary':
             return util.get_summary(self.content)
         elif name == 'visible_comments':
-            return self.comment_set.all()
+            return self.comment_set.filter(is_visible=True)
         return super(Article, self).__getattr__(name)
 
     def __unicode__(self):
@@ -183,12 +183,18 @@ class BlogUser(models.Model):
     the model of blog user
     """
     user = models.OneToOneField(User)
-    # avatar = FileBrowseField(max_length=40, verbose_name='头像')
+    avatar = FileBrowseField(max_length=40, verbose_name='头像',
+                             blank=True, null=True)
     info = models.TextField(verbose_name='用户信息')
 
     def __getattr__(self, name):
         if name == 'summary':
             return self.info[:400]
+        elif name == 'small_avatar':
+            if self.avatar:
+                return self.avatar.url
+            else:
+                return util.get_gravatar_img_url(self.user.email)
         return super(BlogUser, self).__getattr__(name)
 
     def __unicode__(self):

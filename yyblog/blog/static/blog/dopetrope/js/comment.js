@@ -12,9 +12,9 @@ $(function(){
   });
 
   $("input#not-robot").click(function() {
-		$("#commentform").append("<input id=\"not-robot-input\" type=\"hidden\" name=\"not_robot\" value=\"1\" />");
-		$(this).hide();
-	});
+	$("#commentform").append("<input id=\"not-robot-input\" type=\"hidden\" name=\"not_robot\" value=\"1\" />");
+	$(this).hide();
+  });
 
   $('div.reply').live('click', function() {
 	var name = $.trim($(this).siblings('header').children('cite').text());
@@ -95,15 +95,19 @@ function dealResponse(jsonData, statusText){
     $("section#comments").replaceWith(jsonData.html);
 	// reset the comment form
 	$('textarea#message').val('');
-    // $('input#name').val('');
-    // $('input#email').val('');
-    // $('input#website').val('');
 
 	// set reply comment id to empty and hide cancel replay button
 	$('#id_comment_replied').val('');
 	$('form#commentform input[type=button]:last').hide();
-	//scroll to the new comment
-	$('html, body').scrollTop($('#comment-'+jsonData.id).offset().top);
+
+    // show 'I am not robot button and delete the hidden robot input'
+    $("input#not-robot").show();
+    $('form#commentform input#not-robot-input').remove();
+
+	//scroll to the new comment,if the element exists
+    if ($('#comment-'+jsonData.id).length > 0){
+	  $('html, body').scrollTop($('#comment-'+jsonData.id).offset().top);
+    }
     setTimeout($.unblockUI, 1500);
 	// $.unblockUI();
 

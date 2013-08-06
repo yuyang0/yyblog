@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
-# Time-stamp: <2013-08-03 19:49:23 Saturday by Yu Yang>
+# Time-stamp: <2013-08-06 12:04:36 Tuesday by Yu Yang>
 
 """
 some useful function for blog app
 """
 import urllib
 import urllib2
+import os
 import hashlib
 import random
 import string
@@ -16,7 +17,10 @@ def get_summary(html):
     """
     get summary of html string
     """
-    return html[:400]
+    MAX_LINES = 40
+    lines = html.split(os.linesep)
+    results = lines[:MAX_LINES]
+    return ''.join(results)
 
 
 def get_user_IP(request):

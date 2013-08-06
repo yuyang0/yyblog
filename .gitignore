@@ -6,5 +6,5 @@
 .venv
 .dir-locals.el
 data.db
-migrations
+migrations/
 /yyblog/media

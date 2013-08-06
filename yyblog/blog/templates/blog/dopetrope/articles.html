@@ -18,5 +18,5 @@
 
 
 <article class="box">
-	{% include "blog/dopetrope/paginator.html" %}
+	{% include "blog/dopetrope/paginator.html" with page_type=page_type|default:0  %}
 </article>

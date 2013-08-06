@@ -19,7 +19,7 @@
 				<li{% ifequal nav_current 0 %} class="current_page_item"{% endifequal %}><a href="{% url "blog_index" %}">首页</a></li>
 			  {% endif %}
 			  <li{% ifequal nav_current 1 %} class="current_page_item"{% endifequal %}>
-				<a href="">分类</a>
+				<a href="{% url "blog_category_list" %}">分类</a>
 				<ul>
 				  {% for category in categories %}
 					<li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
