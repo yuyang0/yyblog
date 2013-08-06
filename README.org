@@ -1,2 +1,5 @@
 ** Yet Another Django blog
-   一个使用django搭建的个人博客
+   一个使用django搭建的单用户个人博客
+*** installation
+    1. clone this repo to local
+    2. pip install -r requirements.txt
