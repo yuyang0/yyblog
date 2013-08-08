@@ -52,17 +52,13 @@ class Article(models.Model):
     def get_absolute_url(self):
         return ('blog_article', (), {'idx': self.id, 'slug': self.slug})
 
-    def __getattr__(self, name):
-        """
-        add two attributes(summary, visible_comments) to the object
-        Arguments:
-        - `name`:
-        """
-        if name == 'summary':
-            return util.get_summary(self.content)
-        elif name == 'visible_comments':
-            return self.comment_set.filter(is_visible=True)
-        return super(Article, self).__getattr__(name)
+    @property
+    def summary(self):
+        return util.get_summary(self.content)
+
+    @property
+    def visible_comments(self):
+        return self.comment_set.filter(is_visible=True)
 
     def __unicode__(self):
         return self.title
@@ -79,8 +75,6 @@ class Tag(models.Model):
     """
     name = models.CharField(max_length=50, unique=True, verbose_name='标签')
     slug = models.SlugField()
-    # articles = models.ManyToManyField('Article', through='ArticleTag',
-    #                                   verbose_name='文章')
 
     def __unicode__(self):
         return self.name
@@ -133,15 +127,14 @@ class Comment(MPTTModel):
 
     objects = TreeManager()
 
-    def __getattr__(self, name):
-        if name == 'is_author':
-            if self.article_replied:
-                author_email = self.article_replied.author.user.email
-            else:
-                author_email = settings.ADMINS[0][1]
+    @property
+    def is_author(self):
+        if self.article_replied:
+            author_email = self.article_replied.author.user.email
+        else:
+            author_email = settings.ADMINS[0][1]
 
-            return (author_email == self.user_email)
-        return super(Comment, self).__getattr__(name)
+        return (author_email == self.user_email)
 
     class Meta:
         ordering = ['-post_time']

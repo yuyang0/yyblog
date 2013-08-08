@@ -21,12 +21,12 @@ from django.contrib.auth.admin import User
 # Rss
 from django.contrib.syndication.views import Feed
 
-from models import Article, Tag, Category, Comment, BlackList, FriendLink
+from .models import Article, Tag, Category, Comment, BlackList, FriendLink
 from forms import CommentForm
 import util
-from search import get_query
+from .search import get_query
 
-PAGE_SIZE = 1
+PAGE_SIZE = 5
 RANGE_NUM = 5
 
 def paginator_response(max_idx, current_idx, entry_num):
@@ -73,11 +73,13 @@ def get_common_resp_ctx():
     '''
     get the dict for context,mainly used to render sidebar.html
     '''
+    recent_comments = Comment.objects.filter(is_visible=True).\
+                      order_by('-post_time')[:5]
     common_ctx = {
         'populars': Article.objects.order_by('-clicks')[:5],
         'tags': Tag.objects.all(),
         'categories': Category.objects.all(),
-        'recent_comments': Comment.objects.filter(is_visible=True)[: 5],
+        'recent_comments': recent_comments,
         'links': FriendLink.objects.all(),
         'site_title': settings.SITE_TITLE,
     }

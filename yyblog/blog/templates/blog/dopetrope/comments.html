@@ -16,7 +16,7 @@
 			<li id="comment-{{ node.id }}" class="comment{% if node == lastnode %} last{% endif %}">
 				{% if node.level > 0 %}
 					{% for i in node.level|get_range %}
-				<div class="indent">
+				      <div class="indent">
 					{% endfor %}
 				{% endif %}
 				<article class="comment">

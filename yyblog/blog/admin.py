@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
-# Time-stamp: <2013-08-04 14:13:53 Sunday by Yu Yang>
+# Time-stamp: <2013-08-07 21:53:52 Wednesday by Yu Yang>
 
 """
 admin for blog app
@@ -33,14 +33,17 @@ class CategoryAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
 
-
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('username', 'user_email', 'post_time',
+                    'article_replied', 'is_visible')
 class FriendLinkAdmin(admin.ModelAdmin):
     list_display = ('name', 'url')
 
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
-admin.site.register(Comment, MPTTModelAdmin)
+# admin.site.register(Comment, MPTTModelAdmin)
+admin.site.register(Comment, CommentAdmin)
 
 admin.site.register(BlackList)
 admin.site.register(FriendLink, FriendLinkAdmin)

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
-# Time-stamp: <2013-08-06 22:43:16 Tuesday by Yu Yang>
+# Time-stamp: <2013-08-07 21:00:27 Wednesday by Yu Yang>
 
 """
 the URLConf of the blog app
 """
 from django.conf.urls import patterns, url
-from views import RSSFeed
-from sitemap import ArticleSitemap
+from .views import RSSFeed
+from .sitemap import ArticleSitemap
 
 urlpatterns = patterns('blog.views',
     # for the home page
@@ -49,5 +49,6 @@ sitemaps = {
     'article': ArticleSitemap,
 }
 urlpatterns += patterns('',
-    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps}),
 )
